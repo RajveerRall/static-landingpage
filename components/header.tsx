@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 
 const COGNITO_DOMAIN = "ap-south-1i0tu4zlbp.auth.ap-south-1.amazoncognito.com"
 const CLIENT_ID = "77cbj1at51n8kv9svog3gohqf3"
-const REDIRECT_URI = "https://neverwrite.in"
+const REDIRECT_URI = "https://neverwrite.in/app/"
 
 const loginUrl = `https://${COGNITO_DOMAIN}/login?client_id=${CLIENT_ID}&response_type=code&scope=email+openid+phone&redirect_uri=${encodeURIComponent(REDIRECT_URI)}`
 const signUpUrl = `https://${COGNITO_DOMAIN}/signup?client_id=${CLIENT_ID}&response_type=code&scope=email+openid+phone&redirect_uri=${encodeURIComponent(REDIRECT_URI)}`
