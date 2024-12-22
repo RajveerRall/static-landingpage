@@ -5,7 +5,7 @@ import { Card, CardContent } from "@/components/ui/card"
 
 const COGNITO_DOMAIN = "ap-south-1i0tu4zlbp.auth.ap-south-1.amazoncognito.com"
 const CLIENT_ID = "77cbj1at51n8kv9svog3gohqf3"
-const REDIRECT_URI = "https://neverwrite.in/app/"
+const REDIRECT_URI = "https://app.neverwrite.in/"
 
 export default function Cta() {
   return (
