@@ -18,8 +18,8 @@ export default function Footer() {
             </Link>
           </div>
           <div className="mt-4">
-            <Link href="mailto:support@neverwrite.ai" className="text-sm hover:underline">
-              Contact us: support@neverwrite.ai
+            <Link href="mailto:support@neverwrite.in" className="text-sm hover:underline">
+              Contact us: support@neverwrite.in
             </Link>
           </div>
         </div>

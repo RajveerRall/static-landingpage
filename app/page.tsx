@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     description: 'Transform your screen recordings into professional documentation with NeverWrite. Powered by AI for efficiency and quality.',
     images: [
       {
-        url: 'https://neverwrite.ai/og-image.jpg',
+        url: 'https://neverwrite.in/og-image.jpg',
         width: 1200,
         height: 630,
         alt: 'NeverWrite - AI Documentation Tool',
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'NeverWrite - AI-Powered Screen Recording Documentation',
     description: 'Transform your screen recordings into professional documentation with NeverWrite. Powered by AI for efficiency and quality.',
-    images: ['https://neverwrite.ai/twitter-image.jpg'],
+    images: ['https://neverwrite.in/twitter-image.jpg'],
     creator: '@neverwrite',
   },
 }
