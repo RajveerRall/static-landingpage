@@ -19,8 +19,8 @@ export function middleware(request: NextRequest) {
   // Set the sessionId cookie with desired options
   response.cookies.set('sessionId', newSessionId, {
     path: '/',
-    httpOnly: true, // Prevents client-side JS from accessing the cookie
-    sameSite: 'lax', // CSRF protection
+    // httpOnly: true, // Prevents client-side JS from accessing the cookie
+    // sameSite: 'lax', // CSRF protection
     maxAge: 7 * 24 * 60 * 60, // 7 days in seconds
   });
 
