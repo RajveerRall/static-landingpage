@@ -11,17 +11,14 @@
 // export default nextConfig;
 
 
-const withNextConfig = require('@netlify/plugin-nextjs');
+import withNextConfig from '@netlify/plugin-nextjs';
 
-module.exports = withNextConfig({
+const config = withNextConfig({
   reactStrictMode: true,
-  output: 'export',
   experimental: {
     appDir: true,
   },
-    eslint: {
-        // Warning: This allows production builds to successfully complete even if
-        // your project has ESLint errors.
-        ignoreDuringBuilds: true,
-      },
 });
+
+export default config;
+
