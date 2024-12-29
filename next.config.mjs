@@ -11,14 +11,14 @@
 // export default nextConfig;
 
 
-import withNextConfig from '@netlify/plugin-nextjs';
-
-const config = withNextConfig({
+const config = {
   reactStrictMode: true,
+  output: 'export',
   experimental: {
     appDir: true,
   },
-});
+};
 
 export default config;
+
 
