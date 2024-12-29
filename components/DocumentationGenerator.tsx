@@ -48,12 +48,38 @@ export default function DocumentationGenerator() {
     }
   }
 
-  // 1. Check Usage Limit (Hits /api/use-feature)
+  // // 1. Check Usage Limit (Hits /api/use-feature)
+  // const checkUsageBeforeGenerate = async (): Promise<boolean> => {
+  //   try {
+  //     const resp = await fetch('/api/use-feature', { 
+  //       method: 'POST', 
+  //       credentials: 'include',   
+  //     })
+  //     if (!resp.ok) {
+  //       if (resp.status === 403) {
+  //         // Limit reached
+  //         toast.error('You have used the free limit. Please sign up!')
+  //         return false
+  //       }
+  //       // Some other error
+  //       toast.error('Error checking usage limit.')
+  //       return false
+  //     }
+  //     // If 200 → usage is okay
+  //     return true
+  //   } catch (err) {
+  //     console.error('Usage check failed:', err)
+  //     toast.error('Error checking usage. Please try again.')
+  //     return false
+  //   }
+  // }
+
+
   const checkUsageBeforeGenerate = async (): Promise<boolean> => {
     try {
-      const resp = await fetch('/api/use-feature', { 
-        method: 'POST', 
-        credentials: 'include',   
+      const resp = await fetch('/api/use-feature', {
+        method: 'POST',
+        credentials: 'include',
       })
       if (!resp.ok) {
         if (resp.status === 403) {
@@ -73,6 +99,7 @@ export default function DocumentationGenerator() {
       return false
     }
   }
+  
 
   // 2. Existing logic to fetch a presigned URL
   const getPresignedUploadURL = async (file: File): Promise<{ uploadURL: string; key: string } | null> => {
