@@ -19,7 +19,7 @@ const THEME_COLORS: ThemeColors = {
 };
 
 function generateRandomSymbolBackground(): string {
-  const symbols = ["Docs", "gifs", "!", "🎥", "📹", "📄", "▶"];
+  const symbols = ["Docs", "gifs", "!", "📄", "▶"];
   const numSymbols = 30;
   const width = 1000;
   const height = 1000;
@@ -33,7 +33,7 @@ function generateRandomSymbolBackground(): string {
     const fontSize = Math.floor(Math.random() * 30) + 20;
     const color = THEME_COLORS.text_color;
 
-    elements += `<text x="${x}" y="${y}" font-size="${fontSize}" fill="${color}" opacity="0.1">${sym}</text>`;
+    elements += `<text x="${x}" y="${y}" font-size="${fontSize}" fill="${color}" opacity="0.04">${sym}</text>`;
   }
 
   return `

@@ -2,6 +2,12 @@
 
 import { Button } from "@/components/ui/button"
 
+declare global {
+  interface Window {
+    gtag: (...args: any[]) => void;
+  }
+}
+
 const COGNITO_DOMAIN = "ap-south-1i0tu4zlbp.auth.ap-south-1.amazoncognito.com"
 const CLIENT_ID = "77cbj1at51n8kv9svog3gohqf3"
 const REDIRECT_URI = "https://app.neverwrite.in/"
@@ -20,12 +26,26 @@ export default function Hero() {
           Turn screen recordings into professional product documentation with the power of AI.
         </p>
         <div className="mt-8">
-          <Button 
+          {/* <Button 
             className="bg-[#0B4D4A] hover:bg-[#0B4D4A]/90 text-white px-8 py-6 text-lg"
             onClick={() => window.location.href = `https://${COGNITO_DOMAIN}/signup?client_id=${CLIENT_ID}&response_type=code&scope=email+openid+phone&redirect_uri=${encodeURIComponent(REDIRECT_URI)}`}
           >
             Get Started for Free
+          </Button> */
+          
+          <Button 
+            className="bg-[#0B4D4A] hover:bg-[#0B4D4A]/90 text-white px-8 py-6 text-lg"
+            onClick={() => {
+              window.gtag('event', 'sign_up', {
+                method: 'LandingPageFlow',  // optional
+              });
+              window.location.href = `https://${COGNITO_DOMAIN}/signup?client_id=${CLIENT_ID}&response_type=code&scope=email+openid+phone&redirect_uri=${encodeURIComponent(REDIRECT_URI)}`;
+            }}
+          >
+            Get Started for Free
           </Button>
+          
+          }
         </div>
       </div>
     </section>

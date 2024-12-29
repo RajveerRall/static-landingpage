@@ -8,6 +8,8 @@ import Cta from '@/components/cta'
 import DocumentationGenerator from '@/components/DocumentationGenerator'
 
 
+
+
 export const metadata: Metadata = {
   title: 'NeverWrite - Turn Screen Recordings into Professional Documentation',
   description: 'NeverWrite uses AI to transform your screen recordings into high-quality documentation, GIFs, and tutorials. Streamline your content creation process today!',
