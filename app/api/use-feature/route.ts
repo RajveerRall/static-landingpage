@@ -1,29 +1,25 @@
 // app/api/use-feature/route.ts
-
 import { NextRequest, NextResponse } from 'next/server';
 import { DynamoDBClient, GetItemCommand, PutItemCommand } from '@aws-sdk/client-dynamodb';
-import { cookies } from 'next/headers'; // Use Next.js built-in cookies API
 
 // Initialize DynamoDB client
 const dynamo = new DynamoDBClient({ region: process.env.AWS_REGION });
 
 export async function POST(req: NextRequest) {
   try {
-    // 1. Extract sessionId using Next.js cookies API
-    const allCookies = cookies();
-    const sessionId = allCookies.get('sessionId')?.value;
+    const cookies = req.cookies; // Extract cookies from the request
+    const sessionId = cookies.get('sessionId')?.value;
 
-    console.log('Received sessionId:', sessionId); // For debugging
+    console.log('Extracted sessionId:', sessionId); // For debugging
 
     if (!sessionId) {
-      // This should rarely happen due to middleware, but handle gracefully
       return NextResponse.json(
         { message: 'Session ID missing. Please refresh the page.' },
         { status: 400 }
       );
     }
 
-    // 2. Check usage in DynamoDB
+    // 1. Check usage in DynamoDB
     const tableName = process.env.DYNAMO_TABLE || 'DocUsage';
     const getCmd = new GetItemCommand({
       TableName: tableName,
@@ -36,43 +32,34 @@ export async function POST(req: NextRequest) {
       currentCount = parseInt(getRes.Item.count.N || '0', 10);
     }
 
-    // 3. If usage >= 2, block and require sign-up
+    // 2. If usage >= 2, block and require sign-up
     if (currentCount >= 2) {
-      console.log('Usage limit reached for sessionId:', sessionId); // For debugging
       return NextResponse.json(
         { message: 'Usage limit reached. Please sign up to continue.' },
         { status: 403 }
       );
     }
 
-    // 4. Increment usage count
+    // 3. Increment usage count
     currentCount += 1;
     const putCmd = new PutItemCommand({
       TableName: tableName,
       Item: {
         sessionId: { S: sessionId },
         count: { N: currentCount.toString() },
-        // Optionally, store IP address or timestamps
       },
     });
     await dynamo.send(putCmd);
 
-    console.log(`Feature used successfully. Attempt #${currentCount} for sessionId: ${sessionId}`); // For debugging
-
-    // 5. Proceed with your existing doc-generation logic
-    // For demonstration, return a success message:
     return NextResponse.json(
       { message: `Feature used successfully. Attempt #${currentCount}` },
       { status: 200 }
     );
-
   } catch (err: any) {
     console.error('Error in use-feature route:', err);
     return NextResponse.json({ message: 'Server error' }, { status: 500 });
   }
 }
-
-
 
 
 // // app/api/use-feature/route.ts

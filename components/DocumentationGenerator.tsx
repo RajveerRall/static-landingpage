@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { FiCopy, FiRefreshCw } from 'react-icons/fi';
 import toast, { Toaster } from 'react-hot-toast';
 import './GoogleAnalytics';
+import { cookies } from 'next/headers'; // Import cookies
 
 // Add this at the top of your file, after imports
 declare global {
@@ -33,25 +34,29 @@ export default function DocumentationGenerator() {
     }
   };
 
-  // --- Check usage before generating documentation
+
+  
   const checkUsageBeforeGenerate = async (): Promise<boolean> => {
     try {
-      const resp = await fetch('/api/use-feature', {
+      const nextCookies = cookies();
+      const sessionId = nextCookies.get('sessionId')?.value;
+  
+      const response = await fetch('/api/use-feature', {
         method: 'POST',
-        credentials: 'include', // Ensures cookies are sent
-        // credentials: 'same-origin'
+        headers: {
+          Cookie: `sessionId=${sessionId}`,
+        },
       });
-      if (!resp.ok) {
-        if (resp.status === 403) {
-          // Limit reached
+  
+      if (!response.ok) {
+        if (response.status === 403) {
           toast.error('You have used the free limit. Please sign up!');
           return false;
         }
-        // Some other error
         toast.error('Error checking usage limit.');
         return false;
       }
-      // If 200 → usage is okay
+  
       return true;
     } catch (err) {
       console.error('Usage check failed:', err);
