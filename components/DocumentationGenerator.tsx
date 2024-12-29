@@ -1,4 +1,5 @@
 'use client';
+export const dynamic = 'force-dynamic';
 
 import React, { useState, useCallback } from 'react';
 import '@uiw/react-md-editor/markdown-editor.css';
@@ -78,29 +79,27 @@ export default function DocumentationGenerator() {
           fileName: file.name,
           fileType: file.type,
         }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
       });
-      const data = await response.json();
-
+  
       if (!response.ok) {
-        console.error('Error response from /api/get-presigned-url:', data);
-        toast.error(data.message || 'Failed to get upload URL.');
-        return null;
+        if (response.status === 404) {
+          console.error('API route not found.');
+          toast.error('API route not found. Please check the deployment.');
+          return null;
+        }
+        throw new Error(`Error: ${response.statusText}`);
       }
-      if (!data.uploadURL || !data.key) {
-        console.error('Invalid response data:', data);
-        toast.error('Invalid response from server.');
-        return null;
-      }
-      return { uploadURL: data.uploadURL as string, key: data.key as string };
-    } catch (error: any) {
+  
+      const data = await response.json();
+      return { uploadURL: data.uploadURL, key: data.key };
+    } catch (error) {
       console.error('Error fetching presigned URL:', error);
-      toast.error('An error occurred while getting the upload URL.');
+      toast.error('An error occurred while fetching the presigned URL.');
       return null;
     }
   };
+  
 
   // --- Upload the file to S3
   const uploadFileToS3 = async (file: File, uploadURL: string): Promise<boolean> => {
@@ -188,7 +187,7 @@ export default function DocumentationGenerator() {
       setIsLoading(false);
       return;
     }
-    toast.success('Video uploaded successfully! Video is being processed...');
+    toast.success('Video is being processed...');
 
     // d) Poll for the doc
     const baseFileName = key.split('/').pop()?.replace(/\.[^/.]+$/, '') || '';
