@@ -2,15 +2,20 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { DynamoDBClient, GetItemCommand, PutItemCommand } from '@aws-sdk/client-dynamodb';
-import { v4 as uuidv4 } from 'uuid';
+import { parse } from 'cookie'; // Import the 'cookie' package
 
 // Initialize DynamoDB client
 const dynamo = new DynamoDBClient({ region: process.env.AWS_REGION });
 
 export async function POST(req: NextRequest) {
   try {
-    // 1. Extract sessionId from Cookie
-    const sessionId = req.cookies.get('sessionId')?.value;
+    // 1. Parse cookies manually
+    const cookieHeader = req.headers.get('cookie') || '';
+    const cookies = parse(cookieHeader);
+    const sessionId = cookies.sessionId;
+
+    console.log('Received cookies:', cookies); // For debugging
+    console.log('Extracted sessionId:', sessionId); // For debugging
 
     if (!sessionId) {
       // This should rarely happen due to middleware, but handle gracefully
@@ -35,7 +40,7 @@ export async function POST(req: NextRequest) {
 
     // 3. If usage >= 2, block and require sign-up
     if (currentCount >= 2) {
-      // Optionally, log IP address or other details here
+      console.log('Usage limit reached for sessionId:', sessionId); // For debugging
       return NextResponse.json(
         { message: 'Usage limit reached. Please sign up to continue.' },
         { status: 403 }
@@ -54,9 +59,9 @@ export async function POST(req: NextRequest) {
     });
     await dynamo.send(putCmd);
 
-    // 5. Optionally, log usage for analytics here
+    console.log(`Feature used successfully. Attempt #${currentCount} for sessionId: ${sessionId}`); // For debugging
 
-    // 6. Proceed with your existing doc-generation logic
+    // 5. Proceed with your existing doc-generation logic
     // For demonstration, return a success message:
     return NextResponse.json(
       { message: `Feature used successfully. Attempt #${currentCount}` },

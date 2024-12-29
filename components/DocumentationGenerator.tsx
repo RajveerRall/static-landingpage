@@ -38,8 +38,8 @@ export default function DocumentationGenerator() {
     try {
       const resp = await fetch('/api/use-feature', {
         method: 'POST',
-        // credentials: 'include', // Ensures cookies are sent
-        credentials: 'same-origin'
+        credentials: 'include', // Ensures cookies are sent
+        // credentials: 'same-origin'
       });
       if (!resp.ok) {
         if (resp.status === 403) {
