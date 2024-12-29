@@ -36,7 +36,7 @@ export default function DocumentationGenerator() {
     if (!sessionId) {
       sessionId = uuidv4()
       Cookies.set('sessionId', sessionId, { expires: 7,   sameSite: 'none',
-        secure: true, })
+        secure: true,  domain: 'neverwrite.in', })
     }
   }, [])
 
@@ -53,11 +53,7 @@ export default function DocumentationGenerator() {
     try {
       const resp = await fetch('/api/use-feature', { 
         method: 'POST', 
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ /* some data if required */ }),      
+        credentials: 'include',   
       })
       if (!resp.ok) {
         if (resp.status === 403) {
