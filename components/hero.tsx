@@ -16,6 +16,33 @@ const loginUrl = `https://${COGNITO_DOMAIN}/login?client_id=${CLIENT_ID}&respons
 const signUpUrl = `https://${COGNITO_DOMAIN}/signup?client_id=${CLIENT_ID}&response_type=code&scope=email+openid+phone&redirect_uri=${encodeURIComponent(REDIRECT_URI)}`
 
 export default function Hero() {
+
+  interface ButtonProps {
+    className: string;
+    onClick: () => void;
+    children: React.ReactNode;
+  }
+  
+  function ClientButton({ className, onClick, children }: ButtonProps) {
+    return (
+      <Button
+        className={className}
+        onClick={onClick}
+      >
+        {children}
+      </Button>
+    )
+  }
+  
+  function handleClick() {
+    window.gtag('event', 'sign_up', {
+      method: 'LandingPageFlow',  // optional
+    })
+    window.location.href = `https://${COGNITO_DOMAIN}/signup?client_id=${CLIENT_ID}&response_type=code&scope=email+openid+phone&redirect_uri=${encodeURIComponent(REDIRECT_URI)}`  
+  }
+  
+
+
   return (
     <section className="py-20 text-center">
       <div className="container px-4 md:px-6">
@@ -33,17 +60,12 @@ export default function Hero() {
             Get Started for Free
           </Button> */
           
-          <Button 
-            className="bg-[#0B4D4A] hover:bg-[#0B4D4A]/90 text-white px-8 py-6 text-lg"
-            onClick={() => {
-              window.gtag('event', 'sign_up', {
-                method: 'LandingPageFlow',  // optional
-              });
-              window.location.href = `https://${COGNITO_DOMAIN}/signup?client_id=${CLIENT_ID}&response_type=code&scope=email+openid+phone&redirect_uri=${encodeURIComponent(REDIRECT_URI)}`;
-            }}
-          >
-            Get Started for Free
-          </Button>
+        <ClientButton 
+          className="bg-[#0B4D4A] hover:bg-[#0B4D4A]/90 text-white px-8 py-6 text-lg"
+          onClick={handleClick}
+        >
+          Get Started for Free
+        </ClientButton>
           
           }
         </div>

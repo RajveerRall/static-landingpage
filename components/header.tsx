@@ -16,6 +16,25 @@ const REDIRECT_URI = "https://app.neverwrite.in/"
 const loginUrl = `https://${COGNITO_DOMAIN}/login?client_id=${CLIENT_ID}&response_type=code&scope=email+openid+phone&redirect_uri=${encodeURIComponent(REDIRECT_URI)}`
 const signUpUrl = `https://${COGNITO_DOMAIN}/signup?client_id=${CLIENT_ID}&response_type=code&scope=email+openid+phone&redirect_uri=${encodeURIComponent(REDIRECT_URI)}`
 
+
+interface ButtonProps {
+  className: string;
+  onClick: () => void;
+  children: React.ReactNode;
+}
+
+function ClientButton({ className, onClick, children }: ButtonProps) {
+  return (
+    <Button
+      className={className}
+      onClick={onClick}
+    >
+      {children}
+    </Button>
+  )
+}
+
+
 export default function Header() {
   return (
     <header className="py-4 px-4 md:px-6 bg-transparent shadow-none relative z-20">
@@ -25,40 +44,21 @@ export default function Header() {
         </Link>
         <nav>
           <ul className="flex space-x-4">
-            <li> 
-            <Button 
-              asChild
-              className="bg-[#0B4D4A] hover:bg-[#0B4D4A]/90 text-white"
-              variant="outline"
-            >
-              <Link 
-                href={loginUrl} 
-                onClick={(e) => {
-                  e.preventDefault();
-                  window.gtag('event', 'login', {
-                    method: 'LandingPageFlow',  // optional
-                  });
-                  window.location.href = loginUrl;
-                }}
-              >Login</Link>
-            </Button>
+            <li>
+              <ClientButton
+                className="bg-[#0B4D4A] hover:bg-[#0B4D4A]/90 text-white"
+                onClick={handleLoginClick}
+              >
+                <Link href={loginUrl}>Login</Link>
+              </ClientButton>
             </li>
             <li>
-            <Button 
-              asChild
-              className="bg-[#0B4D4A] hover:bg-[#0B4D4A]/90 text-white"
-            >
-              <Link 
-                href={signUpUrl} 
-                onClick={(e) => {
-                  e.preventDefault();
-                  window.gtag('event', 'sign_up', {
-                    method: 'LandingPageFlow',  // optional
-                  });
-                  window.location.href = signUpUrl;
-                }}
-              >Sign Up</Link>
-            </Button>
+              <ClientButton
+                className="bg-[#0B4D4A] hover:bg-[#0B4D4A]/90 text-white"
+                onClick={handleSignUpClick}
+              >
+                <Link href={signUpUrl}>Sign Up</Link>
+              </ClientButton>
             </li>
           </ul>
         </nav>
@@ -67,6 +67,19 @@ export default function Header() {
   )
 }
 
+function handleLoginClick() {
+  window.gtag('event', 'login', {
+    method: 'LandingPageFlow',  // optional
+  })
+  window.location.href = loginUrl
+}
+
+function handleSignUpClick() {
+  window.gtag('event', 'sign_up', {
+    method: 'LandingPageFlow',  // optional
+  })
+  window.location.href = signUpUrl
+}
 
 
 // 'use client'
