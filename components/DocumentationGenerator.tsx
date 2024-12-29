@@ -51,7 +51,14 @@ export default function DocumentationGenerator() {
   // 1. Check Usage Limit (Hits /api/use-feature)
   const checkUsageBeforeGenerate = async (): Promise<boolean> => {
     try {
-      const resp = await fetch('/api/use-feature', { method: 'POST', credentials: 'include' })
+      const resp = await fetch('/api/use-feature', { 
+        method: 'POST', 
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ /* some data if required */ }),      
+      })
       if (!resp.ok) {
         if (resp.status === 403) {
           // Limit reached

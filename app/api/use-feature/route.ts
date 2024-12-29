@@ -8,18 +8,27 @@ const dynamo = new DynamoDBClient({ region: process.env.AWS_REGION })
 
 export async function POST(req: NextRequest) {
   try {
-    // 1. Extract sessionId from Cookie or request body
-    const cookieHeader = req.headers.get('cookie') || ''
-    const cookies = Object.fromEntries(
-      cookieHeader.split(';').map((c) => {
-        const [k, v] = c.trim().split('=')
-        return [k, v]
-      })
-    )
-    const sessionId = cookies.sessionId // or fallback to something else
-    if (!sessionId) {
-      return NextResponse.json({ message: 'Missing session ID' }, { status: 400 })
-    }
+
+      // Use the cookies object from NextRequest:
+      const sessionId = req.cookies.get('sessionId')?.value;
+
+      if (!sessionId) {
+        return NextResponse.json({ message: 'Missing session ID' }, { status: 400 });
+      }
+
+
+    // // 1. Extract sessionId from Cookie or request body
+    // const cookieHeader = req.headers.get('cookie') || ''
+    // const cookies = Object.fromEntries(
+    //   cookieHeader.split(';').map((c) => {
+    //     const [k, v] = c.trim().split('=')
+    //     return [k, v]
+    //   })
+    // )
+    // const sessionId = cookies.sessionId // or fallback to something else
+    // if (!sessionId) {
+    //   return NextResponse.json({ message: 'Missing session ID' }, { status: 400 })
+    // }
 
     // 2. Check usage in DynamoDB
     const tableName = process.env.DYNAMO_TABLE || 'DocUsage'
@@ -57,7 +66,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       message: 'You used the feature. This is attempt #' + currentCount,
     })
-
+    
   } catch (err: any) {
     console.error('Error in use-feature route:', err)
     return NextResponse.json({ message: 'Server error' }, { status: 500 })
