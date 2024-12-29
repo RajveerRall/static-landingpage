@@ -33,29 +33,41 @@ export default function DocumentationGenerator() {
     }
   };
 
+  // Check usage from localStorage
+  const checkUsageBeforeGenerate = (): boolean => {
+    const usageCount = parseInt(localStorage.getItem('docGenUsage') || '0', 10);
 
-  
-  const checkUsageBeforeGenerate = async (): Promise<boolean> => {
-    try {
-      const response = await fetch('/api/use-feature', {
-        method: 'POST',
-        credentials: 'include', // Ensures cookies are sent
-      });
-      if (!response.ok) {
-        if (response.status === 403) {
-          toast.error('You have used the free limit. Please sign up!');
-          return false;
-        }
-        toast.error('Error checking usage limit.');
-        return false;
-      }
-      return true;
-    } catch (err) {
-      console.error('Usage check failed:', err);
-      toast.error('Error checking usage. Please try again.');
+    if (usageCount >= 2) {
+      toast.error('You have used the free limit. Please sign up to continue!');
       return false;
     }
+
+    // Increment usage in localStorage
+    localStorage.setItem('docGenUsage', (usageCount + 1).toString());
+    return true;
   };
+  
+  // const checkUsageBeforeGenerate = async (): Promise<boolean> => {
+  //   try {
+  //     const response = await fetch('/api/use-feature', {
+  //       method: 'POST',
+  //       credentials: 'include', // Ensures cookies are sent
+  //     });
+  //     if (!response.ok) {
+  //       if (response.status === 403) {
+  //         toast.error('You have used the free limit. Please sign up!');
+  //         return false;
+  //       }
+  //       toast.error('Error checking usage limit.');
+  //       return false;
+  //     }
+  //     return true;
+  //   } catch (err) {
+  //     console.error('Usage check failed:', err);
+  //     toast.error('Error checking usage. Please try again.');
+  //     return false;
+  //   }
+  // };
 
   // --- Fetch a presigned URL for uploading the video
   const getPresignedUploadURL = async (file: File): Promise<{ uploadURL: string; key: string } | null> => {
