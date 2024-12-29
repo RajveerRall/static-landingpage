@@ -2,20 +2,18 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { DynamoDBClient, GetItemCommand, PutItemCommand } from '@aws-sdk/client-dynamodb';
-import { parse } from 'cookie'; // Import the 'cookie' package
+import { cookies } from 'next/headers'; // Use Next.js built-in cookies API
 
 // Initialize DynamoDB client
 const dynamo = new DynamoDBClient({ region: process.env.AWS_REGION });
 
 export async function POST(req: NextRequest) {
   try {
-    // 1. Parse cookies manually
-    const cookieHeader = req.headers.get('cookie') || '';
-    const cookies = parse(cookieHeader);
-    const sessionId = cookies.sessionId;
+    // 1. Extract sessionId using Next.js cookies API
+    const allCookies = cookies();
+    const sessionId = allCookies.get('sessionId')?.value;
 
-    console.log('Received cookies:', cookies); // For debugging
-    console.log('Extracted sessionId:', sessionId); // For debugging
+    console.log('Received sessionId:', sessionId); // For debugging
 
     if (!sessionId) {
       // This should rarely happen due to middleware, but handle gracefully

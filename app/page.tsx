@@ -6,7 +6,6 @@ import Demo from '@/components/demo'
 import GifCreation from '@/components/gif-creation'
 import Cta from '@/components/cta'
 import DocumentationGenerator from '@/components/DocumentationGenerator'
-import SessionInitializer from '@/components/SessionInitializer';
 
 
 
@@ -40,7 +39,6 @@ export default function LandingPage() {
   return (
     <main className="min-h-screen relative z-10">
       <Hero />
-      <SessionInitializer />
       <section className="py-20 bg-[#AEBFAE]">
         <div className="container px-4 md:px-6 max-w-none">
           <h2 className="text-3xl font-bold text-center text-[#0B4D4A] mb-8">
