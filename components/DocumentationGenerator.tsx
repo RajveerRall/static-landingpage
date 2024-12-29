@@ -35,7 +35,8 @@ export default function DocumentationGenerator() {
     let sessionId = Cookies.get('sessionId')
     if (!sessionId) {
       sessionId = uuidv4()
-      Cookies.set('sessionId', sessionId, { expires: 7 })
+      Cookies.set('sessionId', sessionId, { expires: 7,   sameSite: 'none',
+        secure: true, })
     }
   }, [])
 
