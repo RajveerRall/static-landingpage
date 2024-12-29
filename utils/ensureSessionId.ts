@@ -6,7 +6,8 @@ export function ensureSessionId() {
   let sessionId = Cookies.get('sessionId')
   if (!sessionId) {
     sessionId = uuidv4()
-    Cookies.set('sessionId', sessionId, { expires: 7 }) // valid for 7 days
+    Cookies.set('sessionId', sessionId, { expires: 7,   sameSite: 'none',
+      secure: true,  domain: 'neverwrite.in',  }) // valid for 7 days
   }
   return sessionId
 }
