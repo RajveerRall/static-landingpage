@@ -11,7 +11,7 @@ export function middleware(request: NextRequest) {
       httpOnly: true,
       sameSite: 'strict',
       path: '/',
-      secure: process.env.NODE_ENV === 'production',
+      // secure: process.env.NODE_ENV === 'production',
       maxAge: 60 * 60 * 24, // 1 day
     });
     return response;

@@ -47,47 +47,20 @@ export default function DocumentationGenerator() {
     localStorage.setItem('docGenUsage', (usageCount + 1).toString());
     return true;
   };
-  
-  // const checkUsageBeforeGenerate = async (): Promise<boolean> => {
-  //   try {
-  //     const response = await fetch('/api/use-feature', {
-  //       method: 'POST',
-  //       credentials: 'include', // Ensures cookies are sent
-  //     });
-  //     if (!response.ok) {
-  //       if (response.status === 403) {
-  //         toast.error('You have used the free limit. Please sign up!');
-  //         return false;
-  //       }
-  //       toast.error('Error checking usage limit.');
-  //       return false;
-  //     }
-  //     return true;
-  //   } catch (err) {
-  //     console.error('Usage check failed:', err);
-  //     toast.error('Error checking usage. Please try again.');
-  //     return false;
-  //   }
-  // };
 
-  // --- Fetch a presigned URL for uploading the video
+
   const getPresignedUploadURL = async (file: File): Promise<{ uploadURL: string; key: string } | null> => {
     try {
       const response = await fetch('/api/get-presigned-url', {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           fileName: file.name,
           fileType: file.type,
         }),
-        headers: { 'Content-Type': 'application/json' },
       });
   
       if (!response.ok) {
-        if (response.status === 404) {
-          console.error('API route not found.');
-          toast.error('API route not found. Please check the deployment.');
-          return null;
-        }
         throw new Error(`Error: ${response.statusText}`);
       }
   
@@ -95,32 +68,103 @@ export default function DocumentationGenerator() {
       return { uploadURL: data.uploadURL, key: data.key };
     } catch (error) {
       console.error('Error fetching presigned URL:', error);
-      toast.error('An error occurred while fetching the presigned URL.');
-      return null;
+      throw error;
     }
   };
   
 
-  // --- Upload the file to S3
+
+  // // --- Fetch a presigned URL for uploading the video
+  // const getPresignedUploadURL = async (file: File): Promise<{ uploadURL: string; key: string } | null> => {
+  //   try {
+  //     const response = await fetch('/api/get-presigned-url', {
+  //       method: 'POST',
+  //       body: JSON.stringify({
+  //         fileName: file.name,
+  //         fileType: file.type,
+  //       }),
+  //       headers: { 'Content-Type': 'application/json' },
+  //     });
+  
+  //     if (!response.ok) {
+  //       if (response.status === 404) {
+  //         console.error('API route not found.');
+  //         toast.error('API route not found. Please check the deployment.');
+  //         return null;
+  //       }
+  //       throw new Error(`Error: ${response.statusText}`);
+  //     }
+  
+  //     const data = await response.json();
+  //     return { uploadURL: data.uploadURL, key: data.key };
+  //   } catch (error) {
+  //     console.error('Error fetching presigned URL:', error);
+  //     toast.error('An error occurred while fetching the presigned URL.');
+  //     return null;
+  //   }
+  // };
+  
+
+  // // --- Upload the file to S3
+  // const uploadFileToS3 = async (file: File, uploadURL: string): Promise<boolean> => {
+  //   try {
+  //     console.log('Uploading file to S3:', file.name);
+  //     const response = await fetch(uploadURL, {
+  //       method: 'PUT',
+  //       body: file,
+  //     });
+  //     console.log('Upload response status:', response.status);
+
+  //     if (!response.ok) {
+  //       let errorMsg = `Upload failed with status ${response.status}`;
+  //       if (response.status === 403) {
+  //         errorMsg = 'Upload failed: Forbidden. Check your permissions.';
+  //       }
+  //       console.error(errorMsg);
+  //       toast.error(errorMsg);
+  //       return false;
+  //     }
+
+  //     console.info('File uploaded to S3 successfully.');
+  //     toast.success('File uploaded to S3 successfully!');
+  //     return true;
+  //   } catch (error: any) {
+  //     console.error('Error uploading file to S3:', error);
+  //     toast.error('An error occurred during the file upload.');
+  //     return false;
+  //   }
+  // };
+
+
   const uploadFileToS3 = async (file: File, uploadURL: string): Promise<boolean> => {
     try {
       console.log('Uploading file to S3:', file.name);
+  
+      // Ensure the correct Content-Type header
       const response = await fetch(uploadURL, {
         method: 'PUT',
         body: file,
+        headers: {
+          'Content-Type': file.type || 'application/octet-stream', // Default to binary if type is not specified
+        },
       });
+  
       console.log('Upload response status:', response.status);
-
+  
+      // Handle unsuccessful uploads
       if (!response.ok) {
         let errorMsg = `Upload failed with status ${response.status}`;
         if (response.status === 403) {
-          errorMsg = 'Upload failed: Forbidden. Check your permissions.';
+          errorMsg = 'Upload failed: Forbidden. Check your permissions or bucket CORS configuration.';
+        } else if (response.status === 400) {
+          errorMsg = 'Upload failed: Bad Request. Ensure the presigned URL is correct.';
         }
         console.error(errorMsg);
         toast.error(errorMsg);
         return false;
       }
-
+  
+      // Successful upload
       console.info('File uploaded to S3 successfully.');
       toast.success('File uploaded to S3 successfully!');
       return true;
@@ -130,8 +174,30 @@ export default function DocumentationGenerator() {
       return false;
     }
   };
+  
 
-  // --- Poll for the generated Markdown
+  // // --- Poll for the generated Markdown
+  // const getPresignedMarkdownURL = async (baseFileName: string): Promise<string | null> => {
+  //   try {
+  //     const response = await fetch('/api/get-generated-markdown-url', {
+  //       method: 'POST',
+  //       headers: { 'Content-Type': 'application/json' },
+  //       body: JSON.stringify({ fileName: baseFileName }),
+  //     });
+  //     if (!response.ok) {
+  //       // Non-200 → doc not ready
+  //       return null;
+  //     }
+  //     const data = await response.json();
+  //     return data.markdownURL as string;
+  //   } catch (error) {
+  //     console.error('Error fetching presigned Markdown URL:', error);
+  //     return null;
+  //   }
+  // };
+
+
+
   const getPresignedMarkdownURL = async (baseFileName: string): Promise<string | null> => {
     try {
       const response = await fetch('/api/get-generated-markdown-url', {
@@ -139,10 +205,13 @@ export default function DocumentationGenerator() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ fileName: baseFileName }),
       });
+  
       if (!response.ok) {
-        // Non-200 → doc not ready
+        const errorResponse = await response.json();
+        console.error(`Server Error: ${errorResponse.message}`);
         return null;
       }
+  
       const data = await response.json();
       return data.markdownURL as string;
     } catch (error) {
@@ -150,6 +219,8 @@ export default function DocumentationGenerator() {
       return null;
     }
   };
+  
+
 
   // --- Main "Generate" flow
   const handleGenerate = useCallback(async () => {
