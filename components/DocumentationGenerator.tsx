@@ -166,7 +166,7 @@ export default function DocumentationGenerator() {
   
       // Successful upload
       console.info('File uploaded to S3 successfully.');
-      toast.success('File uploaded to S3 successfully!');
+      // toast.success('File uploaded to S3 successfully!');
       return true;
     } catch (error: any) {
       console.error('Error uploading file to S3:', error);
@@ -328,12 +328,12 @@ export default function DocumentationGenerator() {
   return (
     <div className="relative w-full h-full min-h-screen flex items-center justify-center p-6">
       <Toaster position="top-right" />
-      <div className="relative w-full max-w-7xl h-[90vh] bg-white bg-opacity-20 backdrop-blur-lg border border-white border-opacity-30 rounded-3xl shadow-2xl overflow-hidden flex flex-col">
+      <div className="relative w-full max-w-7xl h-[100vh] bg-white bg-opacity-20 backdrop-blur-lg border border-white border-opacity-30 rounded-3xl shadow-2xl overflow-hidden flex flex-col">
         <div className="flex-1 p-6 overflow-hidden">
           <MDEditor
             value={markdownContent}
             onChange={(value) => { setMarkdownContent(value ?? '') }}
-            height={600}
+            height={680}
             previewOptions={{ rehypePlugins: [rehypeSanitize] }}
             textareaProps={{ placeholder: "Your generated documentation will appear here..." }}
             className="bg-white bg-opacity-10 backdrop-blur-md rounded-lg p-2 h-full overflow-auto"

@@ -44,8 +44,11 @@ export default function LandingPage() {
       <section className="py-20 bg-[#AEBFAE]">
         <div className="container px-4 md:px-6 max-w-none">
           <h2 className="text-3xl font-bold text-center text-[#0B4D4A] mb-8">
-            Generate Documentation from Your Screen Recordings
+            Generate Documentation from your Screen Recordings
           </h2>
+          <p className="text-center text-gray-600 mb-12">
+          Try it free—no account needed! Create up to 2 documents from your screen recordings.
+          </p>
           <div className="w-full h-[calc(100vh-80px)]">
             <DocumentationGenerator />
           </div>
