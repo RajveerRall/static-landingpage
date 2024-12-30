@@ -14,5 +14,3 @@
 
 [build.environment]
   NODE_VERSION = "18"
-  AWS_REGION = "ap-south-1"
-  S3_BUCKET_NAME = "neverwrite-assets"
