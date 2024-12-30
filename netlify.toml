@@ -1,10 +1,7 @@
 [build]
-  command = "npm run build"
+  command = "node -r dotenv/config ./scripts/build.js && npm run build"
   publish = ".next"
   edge_functions = "netlify/edge-functions"
-  command = "node -r dotenv/config ./scripts/build.js && npm run build"
-  publish = "out"
-
 
 [functions]
   node_bundler = "esbuild"
