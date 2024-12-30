@@ -7,8 +7,8 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 const s3 = new S3Client({
   region: process.env.REGION,
   credentials: {
-    accessKeyId: process.env.AWS_KEY_ID!,
-    secretAccessKey: process.env.AWS_ACCESS_KEY!,
+    accessKeyId: process.env.KEY_ID!,
+    secretAccessKey: process.env.ACCESS_KEY!,
   },
 });
 
