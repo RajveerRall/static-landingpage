@@ -1,6 +1,9 @@
 import { APIGatewayEvent, Context } from 'aws-lambda';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import * as dotenv from 'dotenv';
+dotenv.config();
+
 
 const s3 = new S3Client({
   region: process.env.AWS_REGION,
@@ -57,6 +60,7 @@ exports.handler = async (event: APIGatewayEvent, context: Context) => {
       headers: {
         'Access-Control-Allow-Origin': '*', // Adjust based on allowed domains
         'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Allow-Methods': 'POST',
       },
     };
   } catch (error) {

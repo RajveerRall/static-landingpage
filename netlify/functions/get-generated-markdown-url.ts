@@ -1,6 +1,9 @@
 import { APIGatewayEvent, Context } from 'aws-lambda';
 import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import * as dotenv from 'dotenv';
+dotenv.config();
+
 
 const s3 = new S3Client({
   region: process.env.AWS_REGION,
